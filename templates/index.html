@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Raccoon Dash</title>
+</head>
+<body>
+<iframe id="weather" src="{{ url_for('proxy', name='cal') }}" name="CW2" scrolling="no" width="318" height="318" frameborder="0">Loading Weather...</iframe>
+<iframe id="cal" src="{{ url_for('proxy', name='cal') }}" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no">Loading Calendar...</iframe>
+
+<script>
+window.setInterval(async() => {
+  await reloadIFrame()
+}, 3000);
+async reloadIFrame() {
+  console.log('reloading...');
+  await fetch({{ url_for('proxy', name='cal') }}, {method: "POST",headers: {Content-Type: "application/json"}, body: JSON.stringify({url: 'https://api.wo-cloud.com/content/widget/?geoObjectKey=2917915&language=en&region=US&timeFormat=HH:mm&windUnit=mph&systemOfMeasurement=imperial&temperatureUnit=fahrenheit'})})
+
+  await fetch({{ url_for('proxy', name='cal') }}, {method: "POST",headers: {Content-Type: "application/json"}, body: JSON.stringify({url: 'https://api.wo-cloud.com/content/widget/?geoObjectKey=2917915&language=en&region=US&timeFormat=HH:mm&windUnit=mph&systemOfMeasurement=imperial&temperatureUnit=fahrenheit'})})
+
+  document.getElementById('cal').contentWindow.location.reload();
+  document.getElementById('weather').contentWindow.location.reload();
+}
+</script>
+</body>
+</html>
