@@ -4,10 +4,12 @@
 </head>
 <body>
 <h1>{{ feed.feed.title }}</h1>
+<ul>
 {% for entry in feed.entries %}
-<div>
+<li>
 <h3>{{ entry.title }}</h3>
-</div>
+</li>
 {% endfor %}
+</ul>
 </body>
 </html>

@@ -2,6 +2,7 @@ import flask
 from flask import request, render_template, Flask
 import feedparser
 import requests
+import os
 
 
 app = Flask(__name__)
@@ -17,23 +18,13 @@ def fetch_news():
 	return render_template('news.html', feed=feed)
 
 
-proxydata = {}
+@app.get("/cal/")
+def fetch_cal():
+  return requests.get(os.environ["cal"], headers={'User-Agent': 'Mozilla/5.0'}).content
 
-@app.route("/proxy/<name>", methods=["POST", "GET", "DELETE"])
-def proxy(name):
-	global proxydata
-	if request.method == "POST":
-		proxydata[name] = requests.get(request.form.get("url"), headers={'User-Agent': 'Mozilla/5.0'}.content)
-		return proxydata[name], 200
-	elif request.method == "GET":
-		try:
-			return proxydata[name], 200
-		except KeyError:
-			return "NOT FOUND", 404
-	elif request.method == "DELETE":
-		try:
-			del proxydata
-		except KeyError:
-			return "NOT FOUND", 404
-		else: 
-			return "SUCCESS", 200
+@app.get("/weather/")
+def fetch_weather():
+  return requests.get("https://api.wo-cloud.com/content/widget/?geoObjectKey=2917915&language=en&region=US&timeFormat=HH:mm&windUnit=mph&systemOfMeasurement=imperial&temperatureUnit=fahrenheit", headers={'User-Agent': 'Mozilla/5.0'}).content
+
+if __name__ == '__main__':
+  app.run()
